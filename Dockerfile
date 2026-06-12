@@ -2,15 +2,14 @@ FROM python:3.10-alpine
 
 WORKDIR /app
 
-COPY . .
+RUN apk add --no-cache bash wget curl procps
 
-ARG PORT=8080
-ENV PORT=$PORT
-EXPOSE $PORT
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN apk update && \
-    apk add --no-cache bash wget curl procps && \
-    chmod +x app.py && \
-    pip install -r requirements.txt
+COPY app.py .
+
+ENV PORT=8080
+EXPOSE 8080
 
 CMD ["python3", "app.py"]
